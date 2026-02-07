@@ -532,55 +532,60 @@ chart2
 * based on five topics
 
 ```{python}
-def classify_topic(title):
-
-    t = title.lower()
-
-    # Health Care Fraud
-    if any(word in t for word in [
-        "doctor","hospital","nurse","clinic","medicare","medicaid",
-        "patient","pharmacy","provider","physician","therapy",
-        "laboratory","lab","telehealth","hospice","home health",
-        "ambulance","imaging","medical"
-    ]):
-        return "Health Care Fraud"
-
-    # Financial Fraud
-    elif any(word in t for word in [
-        "bank","loan","financial","investment","insurance","billing",
-        "tax","money laundering","wire fraud"
-    ]):
-        return "Financial Fraud"
+def classify_topic(title: str) -> str:
+    t = (title or "").lower()
 
     # Drug Enforcement
-    elif any(word in t for word in [
-        "drug","opioid","fentanyl","prescription","controlled substance",
-        "trafficking"
-    ]):
+    drug = [
+        "opioid", "fentanyl", "oxycodone", "hydrocodone",
+        "controlled substance", "drug", "pill"
+    ]
+    if any(k in t for k in drug):
         return "Drug Enforcement"
 
     # Bribery / Corruption
-    elif any(word in t for word in [
-        "bribe","kickback","corruption","conspiracy"
-    ]):
+    bribery = [
+        "kickback", "bribe", "corruption", "extortion"
+    ]
+    if any(k in t for k in bribery):
         return "Bribery/Corruption"
 
-    else:
-        return "Other"
+    # Financial Fraud
+    financial = [
+        "wire fraud", "bank", "loan", "credit", "mortgage",
+        "securities", "investment", "crypto", "bitcoin"
+    ]
+    if any(k in t for k in financial):
+        return "Financial Fraud"
+
+    # Health Care Fraud
+    health = [
+        "medicare", "medicaid", "hospital", "clinic",
+        "physician", "doctor", "nurse", "patient",
+        "billing", "claims", "health care", "healthcare"
+    ]
+    if any(k in t for k in health):
+        return "Health Care Fraud"
+
+    return "Other"
 
 
 ```
 
 ```{python}
-df_2022["topic"] = df_2022["title"].apply(classify_topic)
+df_criminal = df_2022[df_2022["category"] == "Criminal and Civil Actions"].copy()
+
+df_criminal["topic"] = df_criminal["title"].apply(classify_topic)
 
 monthly_topic = (
-    df_2022.groupby(["year_month", "topic"])
+    df_criminal.groupby(["year_month", "topic"])
     .size()
     .reset_index(name="n_actions")
 )
 
 monthly_topic["year_month"] = pd.to_datetime(monthly_topic["year_month"])
+
+
 
 ```
 
