@@ -434,7 +434,32 @@ RUN_SCRAPER = False
 # df_2022 = scrape_enforcement_actions(2022, 1, RUN_SCRAPER)
 
 df_2022 = pd.read_csv('enforcement_actions_2022_1.csv')
+
+# 1) How many enforcement actions?
+n_actions = df_2022.shape[0]
+
+# 2) Earliest enforcement action (by date)
+df_2022["date_dt"] = pd.to_datetime(df_2022["date"])
+earliest_row = df_2022.loc[df_2022["date_dt"].idxmin()]
+
+earliest_date = earliest_row["date"]
+earliest_title = earliest_row["title"]
+earliest_category = earliest_row["category"]
+earliest_link = earliest_row["link"]
+
+print(f"How many enforcement actions in final dataframe? {n_actions}")
+print("Earliest enforcement action scraped:")
+print(f"  Date: {earliest_date}")
+print(f"  Title: {earliest_title}")
+print(f"  Category: {earliest_category}")
+print(f"  Link: {earliest_link}")
 ```
+
+I scraped 3,377 enforcement actions starting from January 2022.
+
+The earliest enforcement action in the dataframe is dated January 4, 2022, titled “Central Medical Systems, LLC, Alan Trent Harley And Joan Harley Agree To Pay $600K To Settle False Claims Act Liability.” This action is categorized under Criminal and Civil Actions, and the details can be found at:
+https://oig.hhs.gov/fraud/enforcement/central-medical-systems-llc-alan-trent-harley-and-joan-harley-agree-to-pay-600k-to-settle-false-claims-act-liability/
+
 
 ## Step 3: Plot data based on scraped data
 
