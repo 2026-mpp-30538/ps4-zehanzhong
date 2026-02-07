@@ -194,19 +194,27 @@ print(df.shape)
 * a. Pseudo-Code
 
 1. Check indicator
+
    • If run_scraper is False, print a message and stop.
 
 2. Validate input
+
    • If start_year < 2013, print reminder and stop.
 
 3. Initialize variables
+
    • Create empty list to store results
+
    • Create list/set to track seen links
+
    • Convert start year-month into datetime threshold
+
    • Set page number to 1
 
 4. Crawl pages using a while loop
+
    • A simple for loop is not sufficient because the number of pages is unknown.
+
    • Continue crawling until stopping conditions are met.
 
    For each page:
@@ -214,16 +222,25 @@ print(df.shape)
       b. Download and parse HTML
       c. Find candidate enforcement links
       d. For each link:
+
             • Extract title
+
             • Scan forward to extract date
+
             • Skip entries without valid date
+
             • Convert date string to datetime
+
             • Extract category text
+
             • If date >= threshold, store row
+
             • If date < threshold, stop crawling
 
       e. Stop crawling if:
+
             • No valid rows found
+
             • Old date threshold reached
 
       f. Move to next page and wait 1 second
